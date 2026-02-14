@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="estilos.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <h1>Bienvenido al Gimnasio</h1>
+    <nav>
+        <ul>
+            <li><a href="#" onclick="cargarContenido('form_registrar_cliente.html')">Registrar Cliente</a></li>
+            <li><a href="#" onclick="cargarContenido('form_registrar_pago.html')">Registrar Pago</a></li>
+            <li><a href="#" onclick="cargarContenido('form_registrar_clase.html')">Registrar Clase</a></li>
+            <li><a href="#" onclick="cargarContenido('form_registrar_horario.html')">Registrar Horario</a></li>
+        </ul>
+    <div id="contenido">
+
+    </div>
+
+
+    <div id="modalMensaje" class="modal" style="display:none;">
+        <div class="modal-contenido">
+            <span class="cerrar" onclick="cerrarModal()">&times;</span>
+            <div id="modalTexto">
+            </div>
+            <button id="confirmarBtn" style="width: 30px; background-color: #4ba557 ; border: none; color: white;;" >Sí</button>
+            <button onclick="cerrarModal()" style="width: 30px; background-color: #e74c3c;border: none; color: white;">No</button>
+        </div>
+    </div>
+    <div id="modalMensajeConfirmacion" class="modal" style="display:none;">
+        <div class="modal-contenido">
+            <span class="cerrar" onclick="cerrarModal()">&times;</span>
+            <div id="modalConfirmacion">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

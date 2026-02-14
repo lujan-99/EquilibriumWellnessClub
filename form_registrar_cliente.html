@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>   
+<body>
+    
+    <form action="javascript:confirmarInsertarCliente('insertar_c.php')" method="post">
+        <h1>INSERTAR CLIENTE</h1>
+        <label for="nombre_c">Cliente:</label>
+        <input type="text" name="nombre_c"><br><br>
+        <label for="fecha">Fecha:</label>
+        <input type="date" name="fecha"><br><br>
+        <label for="correo_c">Correo:</label>
+        <input type="email" name="correo_c"><br><br>
+        <label for="genero_c">Genero:</label>
+        <select name="genero_c">
+            <option value="M">Masculino</option>
+            <option value="F">Femenino</option>
+        </select><br><br>
+        <input type="submit" value="Registrar">
+    </form>
+</body>
+</html>

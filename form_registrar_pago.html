@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="javascript:confirmarInsertarPago('insertar_p.php')" method="post">
+        <h1>INSERTAR PAGO</h1>
+        <label for="nombre_c">Cliente:</label>
+        <input type="text" name="nombre_c"><br><br>
+        <label for="tipo">Tipo de pago:</label>
+        <select name="tipo">
+            <option value="efectivo">Efectivo</option>
+            <option value="qr">QR</option>
+        </select><br><br>
+        <label for="fecha_pago">Fecha de Pago:</label>
+        <input type="date" name="fecha_pago"><br><br>
+        <label for="id_plan">Plan:</label>
+        <select name="id_plan">
+            <option value="1">Plan mensual (120 bs)</option>
+            <option value="2">Plan trimestral(350 bs)</option>
+            <option value="3">Plan semestral(650 bs)</option>
+            <option value="4">Plan anual(1250 bs)</option>
+        </select><br><br>
+        <input type="submit" value="Registrar">
+    </form>
+</body>
+</html>
