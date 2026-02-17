@@ -58,3 +58,7 @@ function cerrarModal() {
 function cerrarModalConfirmacion() {
     document.getElementById("modalMensajeConfirmacion").style.display = "none";
 }
+
+
+
+
