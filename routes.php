@@ -70,3 +70,16 @@ if ($action === 'guardarPlan') { $planCtrl->guardarPlan(); }
 if ($action === 'editarPlan') { $planCtrl->editarPlan(); }
 if ($action === 'actualizarPlan') { $planCtrl->actualizarPlan(); }
 if ($action === 'eliminarPlan') { $planCtrl->eliminarPlan(); }
+
+
+// routes.php
+require_once "app/controllers/PagoController.php";
+$pagoCtrl = new PagoController($conexion);
+
+if ($action === 'listarPagos') {
+    $pagoCtrl->mostrarPagos();
+} elseif ($action === 'nuevoPago') {
+    $pagoCtrl->formularioNuevoPago();
+} elseif ($action === 'guardarPago') {
+    $pagoCtrl->guardarPago();
+}

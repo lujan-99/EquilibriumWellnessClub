@@ -209,3 +209,68 @@ document.addEventListener('submit', function (e) {
         .catch(error => console.error('Error:', error));
     }
 });
+
+
+// public/js/dashboard.js
+
+function cargarSeccion(seccion) {
+    let url;
+    
+    if (seccion === 'pagos') {
+        url = "/EquilibriumWellnessClub/routes.php?action=listarPagos";
+    } else if (seccion === 'form_registrar_pago') {
+        // Importante: El formulario de pago también debe pasar por el controlador
+        url = "/EquilibriumWellnessClub/routes.php?action=nuevoPago";
+    } else if (seccion === 'clientes') {
+        url = "/EquilibriumWellnessClub/routes.php?action=listarClientes";
+    } else if (seccion === 'planes') {
+        url = "/EquilibriumWellnessClub/routes.php?action=listarPlanes";
+    } else {
+        url = "/EquilibriumWellnessClub/app/views/admin/secciones/" + seccion + ".php";
+    }
+
+    fetch(url)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("contenido-dinamico").innerHTML = data;
+        })
+        .catch(error => console.error("Error:", error));
+}
+
+
+// public/js/dashboard.js
+
+document.addEventListener('submit', function (e) {
+    const form = e.target;
+    
+    // Añadimos 'formInsertarPago' a la lista de formularios controlados
+    const formulariosCRUD = ['formInsertarCliente', 'formEditarCliente', 'formInsertarPlan', 'formEditarPlan', 'formInsertarPago'];
+
+    if (form && formulariosCRUD.includes(form.id)) {
+        e.preventDefault();
+        
+        // Mapeo de la acción para el controlador
+        let accion = 'guardarCliente'; // Por defecto
+        if (form.id === 'formInsertarPlan') accion = 'guardarPlan';
+        if (form.id === 'formEditarPlan') accion = 'actualizarPlan';
+        if (form.id === 'formInsertarPago') accion = 'guardarPago';
+        if (form.id === 'formEditarCliente') accion = 'actualizarCliente';
+
+        const formData = new FormData(form);
+
+        fetch(`/EquilibriumWellnessClub/routes.php?action=${accion}`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            if (data.includes("Éxito")) {
+                // Si guardamos un pago, recargamos la lista de pagos
+                const seccionARecargar = form.id.includes('Pago') ? 'pagos' : (form.id.includes('Plan') ? 'planes' : 'clientes');
+                cargarSeccion(seccionARecargar);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+});
