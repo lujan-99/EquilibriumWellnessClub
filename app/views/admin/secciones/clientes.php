@@ -1,46 +1,39 @@
-<?php
-session_start();
+<h1 style="color: #2e4356; background-color: #f3f5f4; padding: 10px;">Listado de Clientes</h1>
 
-if (!isset($_SESSION['rol']) || 
-   ($_SESSION['rol'] != 'recepcionista' && $_SESSION['rol'] != 'jefe')) {
-    header("Location: ../../../public/login.php");
-    exit();
-}
-?>
+<button class="insertarbtn" onclick="cargarSeccion('form_registrar_cliente')">Insertar Clientes</button>
 
-<h2>CRUD Usuarios</h2>
-
-<button onclick="abrirFormulario()">Nuevo Usuario</button>
-
-<div id="formulario" style="display:none;">
-    <input type="hidden" id="id">
-
-    <input type="text" id="nombre" placeholder="Nombre">
-    <input type="email" id="gmail" placeholder="Correo">
-    <input type="password" id="password" placeholder="Password">
-
-    <select id="rol">
-        <option value="cliente">Cliente</option>
-        <option value="recepcionista">Recepcionista</option>
-        <option value="jefe">Jefe</option>
-    </select>
-
-    <button onclick="guardarUsuario()">Guardar</button>
-</div>
-
-<hr>
-
-<table border="1">
+<table border="2" style="border-collapse: collapse; width: 100%; margin-top: 15px;">
     <thead>
-        <tr>
+        <tr style="background-color: #2e4356; color: white;">
             <th>ID</th>
             <th>Nombre</th>
-            <th>Email</th>
-            <th>Rol</th>
-            <th>Acciones</th>
+            <th>Fecha de Registro</th>
+            <th>Gmail</th>
+            <th>Sexo</th> 
+            <th>Fecha Fin</th>
+            <th>Operaciones</th>
         </tr>
     </thead>
-    <tbody id="tablaUsuarios"></tbody>
+    <tbody>
+        <?php if (!empty($clientes)): ?>
+            <?php foreach ($clientes as $row): ?>
+                <tr>
+                    <td><?php echo $row['idCliente']; ?></td>
+                    <td><?php echo $row['nombre']; ?></td>
+                    <td><?php echo $row['fecha_i']; ?></td>
+                    <td><?php echo $row['gmail']; ?></td>
+                    <td><?php echo $row['sexo']; ?></td>
+                    <td><?php echo $row['fecha_fin']; ?></td>
+                    <td style="display: flex; gap: 5px; justify-content: center; padding: 5px;">
+                        <button class="editarbtn" onclick="editarCliente(<?php echo $row['idCliente']; ?>)">Editar</button>
+                        <button class="eliminarbtn" onclick="eliminarCliente(<?php echo $row['idCliente']; ?>)">Eliminar</button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 10px;">No se encontraron clientes en la base de datos.</td>
+            </tr>
+        <?php endif; ?>
+    </tbody>
 </table>
-
-<script src="../../../public/js/usuarios.js"></script>
