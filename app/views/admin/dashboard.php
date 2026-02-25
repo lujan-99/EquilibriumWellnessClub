@@ -72,7 +72,12 @@ if (!isset($_SESSION['id'])) {
     </div>
 
 </div>
-
+<script>
+    // Cuando el documento esté listo, carga los vencimientos por defecto
+    document.addEventListener("DOMContentLoaded", function() {
+        cargarSeccion('vencimientos'); 
+    });
+</script>
 <script src="/EquilibriumWellnessClub/public/js/dashboard.js"></script>
 </body>
 </html>

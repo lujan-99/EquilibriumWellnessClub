@@ -85,4 +85,11 @@ public function eliminarCliente() {
         echo "Error al eliminar.";
     }
 }
+
+// app/controllers/UsuarioController.php
+public function listarClientes() {
+    $clientes = $this->modelo->listarTodo(); // Tu función actual
+    $resumen = $this->modelo->obtenerResumenEstadistico();
+    include __DIR__ . '/../views/admin/secciones/listar_clientes.php';
+}
 }

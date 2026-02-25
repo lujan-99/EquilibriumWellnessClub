@@ -83,3 +83,32 @@ if ($action === 'listarPagos') {
 } elseif ($action === 'guardarPago') {
     $pagoCtrl->guardarPago();
 }
+
+
+// routes.php
+require_once "app/controllers/AvisoController.php";
+$avisoCtrl = new AvisoController($conexion);
+
+if ($action === 'listarAvisos') {
+    $avisoCtrl->mostrarAvisos();
+} elseif ($action === 'nuevoAviso') {
+    $avisoCtrl->formularioNuevoAviso();
+} elseif ($action === 'guardarAviso') {
+    $avisoCtrl->guardarAviso();
+}
+
+// routes.php
+if ($action === 'eliminarAviso') {
+    $avisoCtrl->eliminar(); // Asegúrate de que este método exista en el controlador
+}
+
+
+// routes.php
+// ... después de las instanciaciones ...
+$avisoCtrl = new AvisoController($conexion);
+
+// routes.php
+
+if ($action === 'misAvisos') {
+    $avisoCtrl->mostrarAvisosCliente();
+}

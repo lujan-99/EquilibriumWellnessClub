@@ -30,32 +30,6 @@ function cargarSeccion(seccion) {
         });
 }
 
-// Escuchar todos los submits del documento
-document.addEventListener('submit', function (e) {
-    // Si el formulario que se envía es el de insertar cliente
-    if (e.target && e.target.id === 'formInsertarCliente') {
-        e.preventDefault();
-        console.log("Iniciando envío de cliente...");
-
-        const formData = new FormData(e.target);
-
-        fetch('/EquilibriumWellnessClub/routes.php?action=guardarCliente', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.text())
-        .then(data => {
-            alert(data);
-            if (data.includes("Éxito")) {
-                cargarSeccion('clientes'); // Recargar la tabla
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert("Error al conectar con el servidor");
-        });
-    }
-});
 
 // Función para cargar el formulario de edición
 function editarCliente(id) {
@@ -78,62 +52,8 @@ function eliminarCliente(id) {
     }
 }
 
-// Escuchar el submit del formulario de edición
-document.addEventListener('submit', function (e) {
-    if (e.target && e.target.id === 'formEditarCliente') {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-
-        fetch('/EquilibriumWellnessClub/routes.php?action=actualizarCliente', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.text())
-        .then(data => {
-            alert(data);
-            if (data.includes("Éxito")) cargarSeccion('clientes');
-        });
-    }
-});
 
 
-
-// public/js/dashboard.js
-
-document.addEventListener('submit', function (e) {
-    const form = e.target;
-    
-    // Lista de formularios que manejaremos por AJAX
-    const formsPermitidos = ['formInsertarCliente', 'formEditarCliente', 'formInsertarPlan', 'formEditarPlan'];
-
-    if (form && formsPermitidos.includes(form.id)) {
-        e.preventDefault();
-        
-        // Determinamos la acción de routes.php basándonos en el ID del formulario
-        let accion;
-        if (form.id === 'formInsertarPlan') accion = 'guardarPlan';
-        else if (form.id === 'formEditarPlan') accion = 'actualizarPlan';
-        else if (form.id === 'formInsertarCliente') accion = 'guardarCliente';
-        else if (form.id === 'formEditarCliente') accion = 'actualizarCliente';
-
-        const formData = new FormData(form);
-
-        fetch(`/EquilibriumWellnessClub/routes.php?action=${accion}`, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.text())
-        .then(data => {
-            alert(data);
-            if (data.includes("Éxito")) {
-                // Si es un plan, recargamos la sección de planes
-                const seccion = form.id.toLowerCase().includes('plan') ? 'planes' : 'clientes';
-                cargarSeccion(seccion);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-});
 
 
 // public/js/dashboard.js
@@ -176,40 +96,6 @@ function editarPlan(id) {
         .catch(error => console.error('Error:', error));
 }
 
-// public/js/dashboard.js
-
-document.addEventListener('submit', function (e) {
-    const form = e.target;
-    
-    // Lista de formularios que procesaremos por AJAX
-    const formulariosCRUD = ['formInsertarCliente', 'formEditarCliente', 'formInsertarPlan', 'formEditarPlan'];
-
-    if (form && formulariosCRUD.includes(form.id)) {
-        e.preventDefault();
-        
-        // Mapeo automático de IDs a acciones del routes.php
-        let accion;
-        if (form.id === 'formEditarPlan') accion = 'actualizarPlan';
-        else if (form.id === 'formInsertarPlan') accion = 'guardarPlan';
-        // ... (otros formularios)
-
-        const formData = new FormData(form);
-
-        fetch(`/EquilibriumWellnessClub/routes.php?action=${accion}`, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.text())
-        .then(data => {
-            alert(data);
-            if (data.includes("Éxito")) {
-                cargarSeccion('planes'); // Refresca la tabla automáticamente
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-});
-
 
 // public/js/dashboard.js
 
@@ -238,39 +124,124 @@ function cargarSeccion(seccion) {
 }
 
 
+
 // public/js/dashboard.js
 
+function cargarSeccion(seccion) {
+    let url;
+    
+    if (seccion === 'avisos') {
+        url = "/EquilibriumWellnessClub/routes.php?action=listarAvisos";
+    } else if (seccion === 'form_registrar_aviso') {
+        // Necesario para que el controlador cargue los <select> de clientes y planes
+        url = "/EquilibriumWellnessClub/routes.php?action=nuevoAviso";
+    } else if (seccion === 'clientes') {
+        url = "/EquilibriumWellnessClub/routes.php?action=listarClientes";
+    } else if (seccion === 'planes') {
+        url = "/EquilibriumWellnessClub/routes.php?action=listarPlanes";
+    } else if (seccion === 'pagos') {
+        url = "/EquilibriumWellnessClub/routes.php?action=listarPagos";
+    } else {
+        url = "/EquilibriumWellnessClub/app/views/admin/secciones/" + seccion + ".php";
+    }
+
+    fetch(url)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("contenido-dinamico").innerHTML = data;
+        })
+        .catch(error => console.error("Error en cargarSeccion:", error));
+}
+
+// public/js/dashboard.js
+
+function eliminarAviso(id) {
+    if (confirm("¿Estás seguro de que deseas eliminar este aviso?")) {
+        // Llamamos a la acción eliminarAviso en routes.php
+        fetch(`/EquilibriumWellnessClub/routes.php?action=eliminarAviso&id=${id}`)
+            .then(response => response.text())
+            .then(data => {
+                alert(data); // Mostrará "Éxito: Aviso eliminado"
+                if (data.includes("Éxito")) {
+                    cargarSeccion('avisos'); // Refresca la tabla automáticamente
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+}
+// ÚNICO ESCUCHADOR DE SUBMITS
 document.addEventListener('submit', function (e) {
     const form = e.target;
-    
-    // Añadimos 'formInsertarPago' a la lista de formularios controlados
-    const formulariosCRUD = ['formInsertarCliente', 'formEditarCliente', 'formInsertarPlan', 'formEditarPlan', 'formInsertarPago'];
+    const formsAJAX = ['formInsertarCliente', 'formEditarCliente', 'formInsertarPlan', 'formEditarPlan', 'formInsertarPago', 'formInsertarAviso'];
 
-    if (form && formulariosCRUD.includes(form.id)) {
+    if (form && formsAJAX.includes(form.id)) {
         e.preventDefault();
-        
-        // Mapeo de la acción para el controlador
-        let accion = 'guardarCliente'; // Por defecto
-        if (form.id === 'formInsertarPlan') accion = 'guardarPlan';
-        if (form.id === 'formEditarPlan') accion = 'actualizarPlan';
-        if (form.id === 'formInsertarPago') accion = 'guardarPago';
-        if (form.id === 'formEditarCliente') accion = 'actualizarCliente';
+
+        // --- BLOQUEO PARA EVITAR DOBLE INSERCIÓN ---
+        const btn = form.querySelector('button[type="submit"]');
+        if (btn.disabled) return; // Si ya se está enviando, ignoramos el segundo clic
+        btn.disabled = true;
+        btn.innerText = "Guardando...";
+        // -------------------------------------------
+
+        const acciones = {
+            'formInsertarCliente': 'guardarCliente',
+            'formEditarCliente': 'actualizarCliente',
+            'formInsertarPlan': 'guardarPlan',
+            'formEditarPlan': 'actualizarPlan',
+            'formInsertarPago': 'guardarPago',
+            'formInsertarAviso': 'guardarAviso'
+        };
 
         const formData = new FormData(form);
-
-        fetch(`/EquilibriumWellnessClub/routes.php?action=${accion}`, {
+        fetch(`/EquilibriumWellnessClub/routes.php?action=${acciones[form.id]}`, {
             method: 'POST',
             body: formData
         })
-        .then(response => response.text())
+        .then(res => res.text())
         .then(data => {
             alert(data);
             if (data.includes("Éxito")) {
-                // Si guardamos un pago, recargamos la lista de pagos
-                const seccionARecargar = form.id.includes('Pago') ? 'pagos' : (form.id.includes('Plan') ? 'planes' : 'clientes');
-                cargarSeccion(seccionARecargar);
+                // Recargar tabla correspondiente
+                let recarga = 'clientes';
+                if (form.id.includes('Plan')) recarga = 'planes';
+                else if (form.id.includes('Pago')) recarga = 'pagos';
+                else if (form.id.includes('Aviso')) recarga = 'avisos';
+                cargarSeccion(recarga);
+            } else {
+                btn.disabled = false; // Si falló, dejamos intentar de nuevo
+                btn.innerText = "Guardar";
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(err => {
+            btn.disabled = false;
+            console.error(err);
+        });
     }
 });
+
+// public/js/dashboard.js
+
+function cargarSeccion(seccion) {
+    let url;
+    
+    if (seccion === 'form_registrar_pago') {
+        // FORZAMOS que pase por el controlador para llenar los <select>
+        url = "/EquilibriumWellnessClub/routes.php?action=nuevoPago";
+    } else if (seccion === 'pagos') {
+        url = "/EquilibriumWellnessClub/routes.php?action=listarPagos";
+    } else if (seccion === 'clientes') {
+        url = "/EquilibriumWellnessClub/routes.php?action=listarClientes";
+    } else if (seccion === 'planes') {
+        url = "/EquilibriumWellnessClub/routes.php?action=listarPlanes";
+    } else {
+        url = "/EquilibriumWellnessClub/app/views/admin/secciones/" + seccion + ".php";
+    }
+
+    fetch(url)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("contenido-dinamico").innerHTML = data;
+        })
+        .catch(error => console.error("Error:", error));
+}
